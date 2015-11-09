@@ -170,9 +170,11 @@ def main():
     epss = [0.01, 0.1, 0.2, 0.5]
     momentums = [0.0, 0.5, 0.9]
     num_epochs = 100
-    W1, W2, b1, b2, train_error, valid_error,train_MCE_arr, valid_MCE_arr= TrainNN(num_hiddens, eps, momentum, num_epochs)
-    DisplayErrorPlot(train_error, valid_error, "Cross entropy")
-    DisplayErrorPlot(train_MCE_arr, valid_MCE_arr, "Mean classification error")
+    for eps in epss:
+        for momentum in momentums:
+            W1, W2, b1, b2, train_error, valid_error,train_MCE_arr, valid_MCE_arr= TrainNN(num_hiddens, eps, momentum, num_epochs)
+            DisplayErrorPlot(train_error, valid_error, "Cross entropy")
+            DisplayErrorPlot(train_MCE_arr, valid_MCE_arr, "Mean classification error")
 
 
     # If you wish to save the model for future use :
