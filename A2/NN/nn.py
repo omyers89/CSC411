@@ -49,7 +49,11 @@ def TrainNN(num_hiddens, eps, momentum, num_epochs):
 
         # Compute cross entropy
         train_CE = -np.mean(target_train * np.log(prediction) + (1 - target_train) * np.log(1 - prediction))
+<<<<<<< HEAD
         # for section 2.2
+=======
+# for section 2.2
+>>>>>>> b3d9b95fe46b6f3a3e671dad7e352bb710be5cb8
         train_MCE = incorrect_ratio(prediction, target_train)
         # Compute deriv
         dEbydlogit = prediction - target_train
@@ -76,6 +80,7 @@ def TrainNN(num_hiddens, eps, momentum, num_epochs):
         b2 = b2 + db2
 
         valid_CE = Evaluate(inputs_valid, target_valid, W1, W2, b1, b2)
+<<<<<<< HEAD
         # for section 2.2
         valid_MCE = EvaluMCE(inputs_valid, target_valid, W1, W2, b1, b2)
 
@@ -83,6 +88,14 @@ def TrainNN(num_hiddens, eps, momentum, num_epochs):
         valid_error.append(valid_CE)
 
         # for section 2.2
+=======
+# for section 2.2
+        valid_MCE = EvaluMCE(inputs_valid, target_valid, W1, W2, b1, b2)
+        train_error.append(train_CE)
+        valid_error.append(valid_CE)
+
+# for section 2.2
+>>>>>>> b3d9b95fe46b6f3a3e671dad7e352bb710be5cb8
         train_MCE_arr.append(train_MCE)
         valid_MCE_arr.append(valid_MCE)
 
@@ -107,16 +120,24 @@ def Evaluate(inputs, target, W1, W2, b1, b2):
     CE = -np.mean(target * np.log(prediction) + (1 - target) * np.log(1 - prediction))
     return CE
 
+<<<<<<< HEAD
 #added for 2.2
+=======
+>>>>>>> b3d9b95fe46b6f3a3e671dad7e352bb710be5cb8
 def incorrect_ratio(predict,tars):
     incorrect = 0
     diff = predict - tars
     for d in diff[0]:
         if np.abs(d) >= 0.5:
             incorrect += 1
+<<<<<<< HEAD
     return (float(incorrect) / float(tars.size)) * 100
 
 #added for 2.2
+=======
+    return incorrect / len(tars)
+
+>>>>>>> b3d9b95fe46b6f3a3e671dad7e352bb710be5cb8
 def EvaluMCE(inputs, target, W1, W2, b1, b2):
     """Evaluates the model on inputs and targe"""
     h_input = np.dot(W1.T, inputs) + b1  # Input to hidden layer.
@@ -127,14 +148,22 @@ def EvaluMCE(inputs, target, W1, W2, b1, b2):
     return incorrect_ratio(prediction, target)
 
 
+<<<<<<< HEAD
 def DisplayErrorPlot(train_error, valid_error, y_lable):
+=======
+def DisplayErrorPlot(train_error, valid_error):
+>>>>>>> b3d9b95fe46b6f3a3e671dad7e352bb710be5cb8
     plt.figure(1)
     plt.clf()
     plt.plot(range(len(train_error)), train_error, 'b', label='Train')
     plt.plot(range(len(valid_error)), valid_error, 'g', label='Validation')
     plt.xlabel('Epochs')
+<<<<<<< HEAD
     plt.ylabel(y_lable)
     plt.ylim([min(valid_error) - 10, max(valid_error) + 10])
+=======
+    plt.ylabel('Cross entropy')
+>>>>>>> b3d9b95fe46b6f3a3e671dad7e352bb710be5cb8
     plt.legend()
     #plt.show()
     plt.draw()
@@ -155,12 +184,21 @@ def LoadModel(modelfile):
 def main():
     #print("Hello-World")
     num_hiddens = 10
+<<<<<<< HEAD
     epss = [0.01, 0.1, 0.2, 0.5]
     momentums = [0.0, 0.5, 0.9]
     num_epochs = 100
     W1, W2, b1, b2, train_error, valid_error,train_MCE_arr, valid_MCE_arr= TrainNN(num_hiddens, eps, momentum, num_epochs)
     DisplayErrorPlot(train_error, valid_error, "Cross entropy")
     DisplayErrorPlot(train_MCE_arr, valid_MCE_arr, "Mean classification error")
+=======
+    eps = 0.1
+    momentum = 0.0
+    num_epochs = 100
+    W1, W2, b1, b2, train_error, valid_error,train_MCE_arr, valid_MCE_arr= TrainNN(num_hiddens, eps, momentum, num_epochs)
+    DisplayErrorPlot(train_error, valid_error)
+    DisplayErrorPlot(train_MCE_arr, valid_MCE_arr)
+>>>>>>> b3d9b95fe46b6f3a3e671dad7e352bb710be5cb8
 
     # If you wish to save the model for future use :
     # outputfile = 'model.npz'
