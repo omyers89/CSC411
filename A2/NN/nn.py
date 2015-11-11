@@ -163,18 +163,24 @@ def LoadModel(modelfile):
     model = np.load(modelfile)
     return model['W1'], model['W2'], model['b1'], model['b2'], model['train_error'], model['valid_error']
 
-def main():
-    #print("Hello-World")
-    num_hiddens = 10
 
-    epss = [0.01, 0.1, 0.2, 0.5]
-    momentums = [0.0, 0.5, 0.9]
-    num_epochs = 100
-    for eps in epss:
-        for momentum in momentums:
-            W1, W2, b1, b2, train_error, valid_error,train_MCE_arr, valid_MCE_arr= TrainNN(num_hiddens, eps, momentum, num_epochs)
-            DisplayErrorPlot(train_error, valid_error, "Cross entropy")
-            DisplayErrorPlot(train_MCE_arr, valid_MCE_arr, "Mean classification error")
+
+
+
+def main():
+    print("Hello-World")
+    # num_hiddens = 10
+    # epss = [0.01, 0.1, 0.2, 0.5]
+    # momentums = [0.0, 0.5, 0.9]
+    # min_crossEntropy = float('inf')
+    # mi_classError = 100.0
+    # num_epochs = 100
+    # for eps in epss:
+    #     for momentum in momentums:
+    #         W1, W2, b1, b2, train_error, valid_error,train_MCE_arr, valid_MCE_arr= TrainNN(num_hiddens, eps, momentum, num_epochs)
+    #         DisplayErrorPlot(train_error, valid_error, "Cross entropy")
+    #         DisplayErrorPlot(train_MCE_arr, valid_MCE_arr, "Mean classification error")
+    #         temp_min
 
 
     # If you wish to save the model for future use :
