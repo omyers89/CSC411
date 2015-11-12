@@ -3,7 +3,7 @@ import sys
 import matplotlib.pyplot as plt
 plt.ion()
 
-def mogEM(x, K, iters, minVary=0):
+def mogEM(x, K, iters, minVary=0, randConst=1):
   """
   Fits a Mixture of K Gaussians on x.
   Inputs:
@@ -21,7 +21,7 @@ def mogEM(x, K, iters, minVary=0):
   N, T = x.shape
 
   # Initialize the parameters
-  randConst = 1
+  #randConst = 1
   p = randConst + np.random.rand(K, 1)
   p = p / np.sum(p)
   mn = np.mean(x, axis=1).reshape(-1, 1)
@@ -101,6 +101,40 @@ def mogLogProb(p, mu, vary, x):
     logProb[t] = np.log(np.sum(np.exp(logPcAndx - mx))) + mx;
   return logProb
 
+def q2():
+  iters = 10
+  minVary = 0.01
+  train2, valid2, test2, target_train2, target_valid2, target_test2 = LoadData('digits.npz', True, False)
+  train3, valid3, test3, target_train3, target_valid3, target_test3 = LoadData('digits.npz', False, True)
+  k=2
+  crand = 1
+  p2, mu2, vary2, logprobX2 = mogEM(train2, k, iters, minVary, crand)
+  print 'the mixing proportion for 2 model is:\n {}\n and the logProb is:\n{}'.format(p2, logprobX2[iters-1])
+  print "models for number 2"
+  ShowMeans(mu2, "Mean model for digit 2")
+  ShowMeans(vary2, "Var model for digit 2")
+
+  print '********models for digit 3*********'
+  p3, mu3, vary3, logprobX3 = mogEM(train3, k, iters, minVary, crand)
+  print 'the mixing proportion for 3 model is:\n {}\n and the logProb is:\n{}'.format(p3, logprobX3[iters-1])
+  print "models for number 3"
+  ShowMeans(mu3, "Mean model for digit 3")
+  ShowMeans(vary3, "Var model for digit 3")
+#
+# results:
+#  the mixing proportion for 2 model is:
+#  [[ 0.46666666]
+#  [ 0.53333334]]
+#  and the logProb is:
+# [-3890.79258653]
+#
+# the mixing proportion for 3 model is:
+#  [[ 0.52986667]
+#  [ 0.47013333]]
+#  and the logProb is:
+# [ 2294.22172789]
+
+
 def q3():
   iters = 10
   minVary = 0.01
@@ -161,7 +195,8 @@ def q5():
   raw_input('Press Enter to continue.')
 
 if __name__ == '__main__':
-  q3()
-  q4()
-  q5()
+  q2()
+  # q3()
+  # q4()
+  # q5()
 

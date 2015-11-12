@@ -35,13 +35,14 @@ def KMeans(x, K, iters):
 
   return means
 
-def ShowMeans(means):
+def ShowMeans(means, header=''):
   """Show the cluster centers as images."""
   plt.figure(1)
   plt.clf()
   for i in xrange(means.shape[1]):
     plt.subplot(1, means.shape[1], i+1)
     plt.imshow(means[:, i].reshape(16, 16).T, cmap=plt.cm.gray)
+  plt.title(header)
   plt.draw()
   raw_input('Press Enter.')
 
