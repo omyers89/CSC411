@@ -11,7 +11,7 @@ def InitNN(num_inputs, num_hiddens, num_outputs):
     b2 = np.zeros((num_outputs, 1))
     return W1, W2, b1, b2
 
-def TrainNN(num_hiddens, eps, momentum, num_epochs):
+def TrainNN(num_hiddens, eps, momentum, num_epochs, CE=0):
     """Trains a single hidden layer NN.
 
     Inputs:
@@ -88,17 +88,30 @@ def TrainNN(num_hiddens, eps, momentum, num_epochs):
 
         train_MCE_arr.append(train_MCE)
         valid_MCE_arr.append(valid_MCE)
+        if CE == 1:
+            sys.stdout.write('\rStep %d Train CE %.5f Validation CE %.5f' % (epoch, train_CE, valid_CE))
+            sys.stdout.flush()
+            if (epoch % 100 == 0):
+                sys.stdout.write('\n')
+        if CE == 2:
+            sys.stdout.write('\rStep %d Train MCE %.5f Validation MCE %.5f' % (epoch, train_MCE, valid_MCE))
+            sys.stdout.flush()
+            if (epoch % 100 == 0):
+                sys.stdout.write('\n')
 
-        sys.stdout.write('\rStep %d Train CE %.5f Validation CE %.5f' % (epoch, train_CE, valid_CE))
-        sys.stdout.flush()
-        if (epoch % 100 == 0):
-            sys.stdout.write('\n')
+
 
     sys.stdout.write('\n')
-    final_train_error = Evaluate(inputs_train, target_train, W1, W2, b1, b2)
-    final_valid_error = Evaluate(inputs_valid, target_valid, W1, W2, b1, b2)
-    final_test_error = Evaluate(inputs_test, target_test, W1, W2, b1, b2)
-    print 'Error: Train %.5f Validation %.5f Test %.5f' % (final_train_error, final_valid_error, final_test_error)
+    if CE == 1:
+        final_train_error = Evaluate(inputs_train, target_train, W1, W2, b1, b2)
+        final_valid_error = Evaluate(inputs_valid, target_valid, W1, W2, b1, b2)
+        final_test_error = Evaluate(inputs_test, target_test, W1, W2, b1, b2)
+        print 'Error: Train %.5f Validation %.5f Test %.5f' % (final_train_error, final_valid_error, final_test_error)
+    if CE == 2:
+        final_train_MCE = EvaluMCE(inputs_train, target_train, W1, W2, b1, b2)
+        final_valid_MCE = EvaluMCE(inputs_valid, target_valid, W1, W2, b1, b2)
+        final_test_MCE = EvaluMCE(inputs_test, target_test, W1, W2, b1, b2)
+        print 'MCE: Train %.5f Validation %.5f Test %.5f' % (final_train_MCE, final_valid_MCE, final_test_MCE)
     return W1, W2, b1, b2, train_error, valid_error, train_MCE_arr, valid_MCE_arr
 
 def Evaluate(inputs, target, W1, W2, b1, b2):
@@ -135,7 +148,7 @@ def EvaluMCE(inputs, target, W1, W2, b1, b2):
 
 
 
-def DisplayErrorPlot(train_error, valid_error, y_lable):
+def DisplayErrorPlot(train_error, valid_error, y_lable='', ctitle=''):
 
     plt.figure(1)
     plt.clf()
@@ -144,8 +157,8 @@ def DisplayErrorPlot(train_error, valid_error, y_lable):
     plt.xlabel('Epochs')
 
     plt.ylabel(y_lable)
-    plt.ylim([min(valid_error) - 10, max(valid_error) + 10])
-
+    #plt.ylim([min(valid_error) - 10, max(valid_error) + 10])
+    plt.title(ctitle)
     plt.legend()
     #plt.show()
     plt.draw()
@@ -166,22 +179,37 @@ def LoadModel(modelfile):
 
 
 
-
 def main():
-    print("Hello-World")
-    # num_hiddens = 10
-    # epss = [0.01, 0.1, 0.2, 0.5]
-    # momentums = [0.0, 0.5, 0.9]
-    # min_crossEntropy = float('inf')
-    # mi_classError = 100.0
-    # num_epochs = 100
-    # for eps in epss:
-    #     for momentum in momentums:
-    #         W1, W2, b1, b2, train_error, valid_error,train_MCE_arr, valid_MCE_arr= TrainNN(num_hiddens, eps, momentum, num_epochs)
-    #         DisplayErrorPlot(train_error, valid_error, "Cross entropy")
-    #         DisplayErrorPlot(train_MCE_arr, valid_MCE_arr, "Mean classification error")
-    #         temp_min
+    print""
+  #
+  #   num_hiddens = 10
+  #   eps = 0.1
+  #   momentum = 0.0
+  #   num_epochs = 1000
+  #   W1, W2, b1, b2, train_error, valid_error,train_MCE_arr, valid_MCE_arr = TrainNN(num_hiddens, eps, momentum, num_epochs)
+  #   DisplayErrorPlot(train_error, valid_error, "Cross entropy", "Plot of Error curves")
+  #   DisplayErrorPlot(train_MCE_arr, valid_MCE_arr, "Mean classification error", "Plot of class-Error curves")
+  # # If you wish to save the model for future use :
+  # outputfile = 'model.npz'
+  # SaveModel(outputfile, W1, W2, b1, b2, train_error, valid_error)
 
+    # print("Hello-World")
+    # num_hiddens = 10
+    # eps = [0.01, 0.1, 0.2, 0.5]
+    # # momentums = [0.0, 0.5, 0.9]
+    # # min_crossEntropy = float('inf')
+    # # mi_classError = 100.0
+    # num_epochs = 100
+    # W1, W2, b1, b2, train_error, valid_error,train_MCE_arr, valid_MCE_arr= TrainNN(num_hiddens, eps, momentum, num_epochs)
+    # DisplayErrorPlot(train_error, valid_error, "Cross entropy")
+    # DisplayErrorPlot(train_MCE_arr, valid_MCE_arr, "Mean classification error")
+    # # for eps in epss:
+    # #     for momentum in momentums:
+    # #         W1, W2, b1, b2, train_error, valid_error,train_MCE_arr, valid_MCE_arr= TrainNN(num_hiddens, eps, momentum, num_epochs)
+    # #         DisplayErrorPlot(train_error, valid_error, "Cross entropy")
+    # #         DisplayErrorPlot(train_MCE_arr, valid_MCE_arr, "Mean classification error")
+    # #         temp_min
+    #
 
     # If you wish to save the model for future use :
     # outputfile = 'model.npz'

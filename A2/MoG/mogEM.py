@@ -3,7 +3,7 @@ import sys
 import matplotlib.pyplot as plt
 plt.ion()
 
-def mogEM(x, K, iters, minVary=0, randConst=1):
+def mogEM(x, K, iters, minVary=0.0, randConst=1.0, init_kmeans=False):
   """
   Fits a Mixture of K Gaussians on x.
   Inputs:
@@ -29,7 +29,10 @@ def mogEM(x, K, iters, minVary=0, randConst=1):
  
   # Change the initializaiton with Kmeans here
   #--------------------  Add your code here --------------------  
-  mu = mn + np.random.randn(N, K) * (np.sqrt(vr) / randConst)
+  if init_kmeans:
+    mu = KMeans(x, K, 5)
+  else:
+    mu = mn + np.random.randn(N, K) * (np.sqrt(vr) / randConst)
   
   #------------------------------------------------------------  
   vary = vr * np.ones((1, K)) * 2
@@ -142,8 +145,15 @@ def q3():
   # Train a MoG model with 20 components on all 600 training
   # vectors, with both original initialization and kmeans initialization.
   #------------------- Add your code here ---------------------
-
+  k=20
+  crand = 1
+  p, mu, vary, logprobX = mogEM(inputs_train, k, iters, minVary, crand,False)
+  print 'Regular the mixing proportion is:\n {}\n and the logProb is:\n{}'.format(p, logprobX[iters-1])
   raw_input('Press Enter to continue.')
+  pi, mui, varyi, logprobXi = mogEM(inputs_train, k, iters, minVary, crand,True)
+  print 'Init with k-means the mixing proportion is:\n {}\n and the logProb is:\n{}'.format(pi, logprobXi[iters-1])
+  raw_input('Press Enter to continue.')
+
 def q4():
   iters = 10
   minVary = 0.01
@@ -195,8 +205,8 @@ def q5():
   raw_input('Press Enter to continue.')
 
 if __name__ == '__main__':
-  q2()
-  # q3()
+  #q2()
+  q3()
   # q4()
   # q5()
 
